@@ -90,7 +90,7 @@ MeshCollider:
   m_GameObject: {fileID: 1235664966799974918}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 1235664967930778585}
   - component: {fileID: 2967057120847029542}
   - component: {fileID: 8982040714176890191}
+  - component: {fileID: 8787252464376121774}
   m_Layer: 0
   m_Name: 0,0
   m_TagString: Untagged
@@ -154,8 +155,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c88782ef2214e04e82c99bb7d042fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  towerPrefab: {fileID: 6352294338417051738, guid: 80b2ed85db4d56040b054e6261608515,
+    type: 3}
+  towerHeight: 0
   isExplored: 0
   exploredFrom: {fileID: 0}
+  isPlaceable: 1
+--- !u!65 &8787252464376121774
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235664967930778584}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: -0.5, z: 0}
 --- !u!1 &2481000388706371478
 GameObject:
   m_ObjectHideFlags: 0

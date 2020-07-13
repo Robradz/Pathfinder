@@ -5,7 +5,9 @@ using UnityEngine;
 public class EnemyDamage : MonoBehaviour
 {
 
-    [SerializeField] int hitPoints = 10;
+    [SerializeField] ParticleSystem hitParticlePrefab;
+    [SerializeField] ParticleSystem deathParticlePrefab;
+    [SerializeField] int hitPoints = 20;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +26,13 @@ public class EnemyDamage : MonoBehaviour
         hitPoints--;
         if (hitPoints < 1)
         {
+            var death = Instantiate<ParticleSystem>(deathParticlePrefab, transform.position, Quaternion.identity);
+            death.Play();
             Destroy(gameObject);
+        }
+        else
+        {
+            hitParticlePrefab.Play();
         }
     }
 

@@ -1,73 +1,76 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
 
+    // Paramaters of each tower
     [SerializeField] Transform objectToPan;
+    [SerializeField] float attackRange = 50f;
+    [SerializeField] ParticleSystem projectileParticle;
 
-    [SerializeField] float range = 50f;
-    [SerializeField] ParticleSystem bullets;
-    GameObject[] enemies;
-    GameObject closest;
-    float closestDistance;
-    int enemiesPresent;
-
-    private void Start()
-    {
-    }
+    // State of each tower
+    Transform targetEnemy;
 
     // Update is called once per frame
     void Update()
     {
-        FollowClosestEnemy();
-        ShootInRange();
+        SetTargetEnemy();
+        if (targetEnemy)
+        {
+            objectToPan.LookAt(targetEnemy);
+            FireAtEnemy();
+        }
+        else
+        {
+            Shoot(false);
+        }
     }
 
-    private void ShootInRange()
+    private void SetTargetEnemy()
     {
-        bool inRange;
+        var sceneEnemies = FindObjectsOfType<EnemyDamage>();
+        if (sceneEnemies.Length == 0) { return; }
 
-        try
-        { 
-            inRange = Vector3.Distance(gameObject.transform.position, closest.transform.position) <= range;
-        }
-        catch
+        Transform closestEnemy = sceneEnemies[0].transform;
+
+        foreach (EnemyDamage testEnemy in sceneEnemies)
         {
-            inRange = false;
+            closestEnemy = GetClosest(closestEnemy, testEnemy.transform);
         }
 
-        var emission = bullets.emission;
-        emission.enabled = enemies.Length > 0 && inRange;
+        targetEnemy = closestEnemy;
     }
 
-    private void FollowClosestEnemy()
+    private Transform GetClosest(Transform transformA, Transform transformB)
     {
+        var distToA = Vector3.Distance(transform.position, transformA.position);
+        var distToB = Vector3.Distance(transform.position, transformB.position);
 
-        // Finds all enemies in game to choose closest one
-        enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        if (enemies.Length <= 0)
+        if (distToA < distToB)
         {
-            enemiesPresent = 0;
-            return;
+            return transformA;
         }
 
-        // closest enemy is found by looking at the distance of each enemy, with the first one in the array being the default
-        closest = enemies[0];
-        closestDistance = Vector3.Distance(closest.transform.position, gameObject.transform.position);
+        return transformB;
+    }
 
-        foreach (GameObject enemy in enemies)
+    private void FireAtEnemy()
+    {
+        float distanceToEnemy = Vector3.Distance(targetEnemy.transform.position, gameObject.transform.position);
+        if (distanceToEnemy <= attackRange)
         {
-            float enemyDistance = Vector3.Distance(enemy.transform.position, gameObject.transform.position);
-            if (enemyDistance < closestDistance)
-            {
-                closest = enemy;
-                closestDistance = enemyDistance;
-            }
+            Shoot(true);
         }
+        else
+        {
+            Shoot(false);
+        }
+    }
 
-        objectToPan.LookAt(closest.transform);
+    private void Shoot(bool isActive)
+    {
+        var emissionModule = projectileParticle.emission;
+        emissionModule.enabled = isActive;
     }
 }

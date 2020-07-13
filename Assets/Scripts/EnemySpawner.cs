@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -19,7 +20,7 @@ public class EnemySpawner : MonoBehaviour
     {
         for (int i = 0; i < numEnemies; i++)
         {
-            SpawnEnemy();
+            if (i > 0) { SpawnEnemy(); }
             yield return new WaitForSeconds(secondsBetweenSpawns);
         }
     }
